@@ -29,20 +29,19 @@ func (c *customerView) showMenu() {
 		case "1":
 			c.add()
 		case "2":
-			fmt.Println("修改客户")
+			c.edit()
 		case "3":
-			fmt.Println("删除客户")
+			c.delete()
 		case "4":
 			c.list()
 		case "5":
-			c.loop = true
-
+			c.exit()
 		default:
 			fmt.Println("您的输入有误，请重新输入！")
 		}
 
 		if c.loop {
-			fmt.Println("您退出了客户关系管理系统...")
+			fmt.Println("成功退出客户关系管理系统")
 			break
 		}
 
@@ -122,6 +121,95 @@ func (c *customerView) add() {
 		fmt.Println("-----------------添加完成-----------------")
 	} else {
 		fmt.Println("-----------------添加失败-----------------")
+	}
+}
+
+//修改客户
+func (c *customerView) edit() {
+	fmt.Println("-----------------修改客户-----------------")
+	fmt.Print("请选择删除客户编号（-1退出）：")
+	id := -1
+	fmt.Scanln(&id)
+	if id == -1 {
+		return
+	}
+
+	index := c.customerService.FindById(id)
+
+	if -1 == index {
+		fmt.Println("-----------------输入id不存在，请重新输入--------------")
+	} else {
+		customer := c.customerService.GetInfoById(id)
+		fmt.Printf("姓名(%v)：", customer.Name)
+		name := ""
+		fmt.Scanln(&name)
+		fmt.Printf("性别(%v)：", customer.Gender)
+		sex := ""
+		fmt.Scanln(&sex)
+		fmt.Printf("年龄(%d)：", customer.Age)
+		age := 0
+		fmt.Scanln(&age)
+		fmt.Printf("手机号(%v)：", customer.Phone)
+		phone := ""
+		fmt.Scanln(&phone)
+		phone = verifyPhone(phone)
+		fmt.Printf("邮箱(%v)：", customer.Email)
+		email := ""
+		fmt.Scanln(&email)
+		email = verifyEmail(email)
+		customerModel := model.NewCustomer2(name, age, sex, phone, email)
+		if c.customerService.Update(id, customerModel) {
+			fmt.Println("-----------------修改完成-----------------")
+		} else {
+			fmt.Println("-----------------修改失败-----------------")
+		}
+	}
+
+}
+
+//删除某个客户的信息
+func (c *customerView) delete() {
+	fmt.Println("-----------------删除客户-----------------")
+	fmt.Print("请选择删除客户编号（-1退出）：")
+	id := -1
+	fmt.Scanln(&id)
+	if id == -1 {
+		return
+	}
+	fmt.Print("是否确认删除（Y/N）：")
+	choice := ""
+	for {
+		fmt.Scanln(&choice)
+		if choice == "Y" || choice == "y" {
+			if !c.customerService.Delete(id) {
+				fmt.Println("你要删除的ID编号不存在！")
+				break
+			} else {
+				fmt.Println("-----------------删除完成-----------------")
+				break
+			}
+		} else if choice == "N" || choice == "n" {
+			break
+		} else {
+			fmt.Print("您的输入有误！请重新输入（Y/N）：")
+		}
+	}
+}
+
+//退出
+func (c *customerView) exit() {
+	fmt.Print("是否确认退出系统？（Y/N）：")
+	choice := ""
+	for {
+		fmt.Scanln(&choice)
+		if choice == "Y" || choice == "y" {
+			c.loop = true
+			break
+		} else if choice == "N" || choice == "n" {
+			break
+		} else {
+			fmt.Print("您的输入有误！请重新输入（Y/N）：")
+		}
 	}
 }
 
