@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"golangPractise/customerPro/model"
 	"golangPractise/customerPro/service"
+	"golangPractise/customerPro/utils"
 )
 
 type customerView struct {
@@ -25,7 +27,7 @@ func (c *customerView) showMenu() {
 		fmt.Scanln(&c.key)
 		switch c.key {
 		case "1":
-			fmt.Println("添加客户")
+			c.add()
 		case "2":
 			fmt.Println("修改客户")
 		case "3":
@@ -62,6 +64,64 @@ func (c *customerView) list() {
 		println()
 	} else {
 		fmt.Println("暂无数据...")
+	}
+}
+
+//校验手机号
+func verifyPhone(phone string) string {
+	mobile := ""
+	flag := utils.VerifyMobileFormat(phone)
+	if flag == false {
+		fmt.Println("请输入有效的手机号！")
+		fmt.Print("手机号：")
+		fmt.Scanln(&mobile)
+		verifyPhone(mobile)
+	} else {
+		mobile = phone
+	}
+	return mobile
+}
+
+//校验邮箱
+func verifyEmail(email string) string {
+	_email := ""
+	flag := utils.VerifyEmailFormat(email)
+	if flag == false {
+		fmt.Println("请输入有效的邮箱！")
+		fmt.Print("邮箱：")
+		fmt.Scanln(&_email)
+		verifyEmail(_email)
+	} else {
+		_email = email
+	}
+	return _email
+}
+
+//添加客户
+func (c *customerView) add() {
+	fmt.Println("-----------------添加客户-----------------")
+	fmt.Print("姓名：")
+	name := ""
+	fmt.Scanln(&name)
+	fmt.Print("性别：")
+	sex := ""
+	fmt.Scanln(&sex)
+	fmt.Print("年龄：")
+	age := 0
+	fmt.Scanln(&age)
+	fmt.Print("手机号：")
+	phone := ""
+	fmt.Scanln(&phone)
+	phone = verifyPhone(phone)
+	fmt.Print("邮箱：")
+	email := ""
+	fmt.Scanln(&email)
+	email = verifyEmail(email)
+	customer := model.NewCustomer2(name, age, sex, phone, email)
+	if c.customerService.Add(customer) {
+		fmt.Println("-----------------添加完成-----------------")
+	} else {
+		fmt.Println("-----------------添加失败-----------------")
 	}
 }
 
