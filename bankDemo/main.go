@@ -1,9 +1,9 @@
 package main
 
 import (
-	"Project/bankDemo/model"
-	"Project/bankDemo/utils"
 	"fmt"
+	"golangPractise/bankDemo/model"
+	"golangPractise/utils"
 )
 
 func main() {
