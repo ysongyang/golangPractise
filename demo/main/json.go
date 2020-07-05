@@ -22,6 +22,13 @@ func jsonStruct() {
 		fmt.Println("序列化失败...", err)
 	}
 	fmt.Println(string(data))
+
+	if err := json.Unmarshal([]byte(data), &monster); err != nil {
+		fmt.Println("反序列化失败...", err)
+	}
+
+	fmt.Println("反序列化后：", monster)
+
 }
 
 func jsonMap() {
@@ -52,7 +59,7 @@ func jsonSlice() {
 	m2 = make(map[string]interface{})
 	m2["name"] = "梨瓜"
 	m2["age"] = 22
-	m2["address"] = "河南 郑州"
+	m2["address"] = [2]string{"郑州", "珠海"}
 	slice = append(slice, m1, m2)
 	data, err := json.Marshal(slice)
 	if err != nil {
