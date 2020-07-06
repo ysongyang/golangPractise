@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"golangPractise/customerPro/model"
 	"golangPractise/customerPro/service"
-	"golangPractise/customerPro/utils"
+	"golangPractise/utils"
 )
 
 type customerView struct {

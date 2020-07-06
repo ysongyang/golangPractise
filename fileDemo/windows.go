@@ -11,4 +11,5 @@ func main() {
 	fmt.Println("加密后：", pwd)
 	bytes, _ := utils.DecryptCode(pwd)
 	fmt.Println("解密后：", string(bytes))
+
 }
