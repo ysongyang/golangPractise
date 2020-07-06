@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"golangPractise/customerPro/utils"
+	"golangPractise/utils"
 )
 
 func main() {

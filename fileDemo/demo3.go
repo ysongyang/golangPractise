@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"golangPractise/fileDemo/utils"
+	"golangPractise/utils"
 	"io"
 	"io/ioutil"
 	"os"
