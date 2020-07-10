@@ -1,11 +1,14 @@
 package message
 
+import "golangPractise/chatRoom/service/model"
+
 //服务器和客户端共用的消息体
 
 const (
 	LoginMsgType    = "LoginMsg" //登录类型
 	LoginResMsgType = "LoginResMsg"
-	RegMsgType      = "RegMsg" //注册额类型
+	RegMsgType      = "RegMsg" //
+	ResponseMsgType = "ResponseMsg"
 )
 
 type Message struct {
@@ -25,7 +28,14 @@ type LoginResMsg struct {
 	Error string `json:"error"`
 }
 
+//注册消息体
 type RegMsg struct {
-	UserName string
-	UserPwd  string
+	user model.User `json:"user"`
+}
+
+//消息返回的消息体
+type ResponseMsg struct {
+	Code  int    `json:"code"`
+	Error string `json:"error"`
+	Data  string `json:"data"`
 }
