@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/garyburd/redigo/redis"
 	"golangPractise/chatRoom/common/utils"
 	"golangPractise/chatRoom/service/model"
 	"net"
@@ -22,14 +21,12 @@ func process(conn net.Conn) {
 	}
 }
 
-var RedisPool *redis.Pool
-
 func initUserDao() {
-	model.MyUserDao = model.NewUserDao(RedisPool)
+	model.MyUserDao = model.NewUserDao(utils.RedisPoolDb)
 }
 
 func main() {
-	RedisPool = utils.RedisPool() //初始化redis连接池
+	utils.RedisPool() //初始化redis连接池
 	initUserDao()
 	fmt.Println("服务器已启动...正在监听8889端口")
 	if listen, err := net.Listen("tcp", "0.0.0.0:8889"); err != nil {
