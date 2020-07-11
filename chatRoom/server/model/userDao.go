@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 )
@@ -39,10 +38,9 @@ func (userDao *UserDao) getUserById(conn redis.Conn, userId int) (user *User, er
 	//把res反序列化成User对象
 	err = json.Unmarshal([]byte(res), user)
 	if err != nil {
-		//err = fmt.Errorf("getUserById json.Unmarshal error: %s", err)
 		return
 	}
-	return user, nil
+	return
 }
 
 //完成登录的校验
@@ -55,7 +53,7 @@ func (userDao *UserDao) Login(userId int, userPwd string) (user *User, err error
 	user, err = userDao.getUserById(conn, userId)
 
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	//校验密码
@@ -63,7 +61,7 @@ func (userDao *UserDao) Login(userId int, userPwd string) (user *User, err error
 		err = ERROR_USER_PASSWORD
 		return
 	}
-	return user, nil
+	return
 }
 
 //注册的处理
@@ -85,8 +83,8 @@ func (userDao *UserDao) Register(user *User) (err error) {
 	}
 	_, err = conn.Do("HSet", "users", user.UserId, string(data))
 	if err != nil {
-		errText := fmt.Sprintf("%s:%s", "register error", err)
-		return errors.New(errText)
+		fmt.Println("register error ", err)
+		return
 	}
 	return
 }

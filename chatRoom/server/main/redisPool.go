@@ -1,4 +1,4 @@
-package utils
+package main
 
 //redis连接池
 
@@ -16,11 +16,12 @@ const (
 	redisPassword    = ""
 )
 
-var RedisPoolDb *redis.Pool
+var redisPoolDb *redis.Pool
 
 // redisPool 返回redis连接池
 func RedisPool() *redis.Pool {
-	RedisPoolDb = &redis.Pool{
+	fmt.Println("RedisPool初始化完成...")
+	redisPoolDb = &redis.Pool{
 		MaxIdle:     redisMaxIdle,
 		IdleTimeout: redisIdleTimeout * time.Second,
 		MaxActive:   redisMaxActive, //最大的连接数，0不限制
@@ -45,5 +46,5 @@ func RedisPool() *redis.Pool {
 			return nil
 		},
 	}
-	return RedisPoolDb
+	return redisPoolDb
 }
