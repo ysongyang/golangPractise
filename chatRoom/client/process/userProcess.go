@@ -8,6 +8,7 @@ import (
 	"golangPractise/chatRoom/common/message"
 	"golangPractise/chatRoom/common/utils"
 	"net"
+	"time"
 )
 
 type UserLoginProcess struct {
@@ -40,8 +41,8 @@ func (userLogin *UserLoginProcess) Login(userId int, userPwd string) (err error)
 	msg.Data = string(data)
 
 	//序列化msg
-	dataMsg, error := json.Marshal(msg)
-	if error != nil {
+	dataMsg, err := json.Marshal(msg)
+	if err != nil {
 		errText := fmt.Sprintf("%s:%s", "Login msg json Marshal error", err)
 		return errors.New(errText)
 	}
@@ -79,21 +80,96 @@ func (userLogin *UserLoginProcess) Login(userId int, userPwd string) (err error)
 		return errors.New(errText)
 	}
 	fmt.Printf("收到服务端数据 %v\n", res)
-	var loginResMsg message.LoginResMsg
+	var responseMsg message.ResponseMsg
 	//将res的Data反序列化成loginResMsg
-	err = json.Unmarshal([]byte(res.Data), &loginResMsg)
+	err = json.Unmarshal([]byte(res.Data), &responseMsg)
 	if err != nil {
 		errText := fmt.Sprintf("%s:%s", "Login loginResMsg json Unmarshal error", err)
 		return errors.New(errText)
 	}
-	if loginResMsg.Code == 200 {
+	if responseMsg.Code == 200 {
 		//启动一个隐藏的协程，该协程保持和服务端的通讯，如果服务端有数据流则进行推送给客户端
 		go ProcessesServiceMsg(conn)
 		//显示登陆成功的菜单
 		for {
-			ShowMenu()
+			ShowMenu(res.Data)
 		}
 	}
-	fmt.Println(loginResMsg.Error)
+	fmt.Println(responseMsg.Error)
+	return
+}
+
+//注册
+func (userLogin *UserLoginProcess) Register(userId int, userPwd string, userName string, phone string) (err error) {
+	conn, err := net.Dial("tcp", "0.0.0.0:8889")
+	if err != nil {
+		errText := fmt.Sprintf("%s:%s", "Register net Dial error", err)
+		return errors.New(errText)
+	}
+	defer conn.Close() //延时关闭
+	//发送消息给服务器
+	var msg message.Message
+	msg.Type = message.RegMsgType
+
+	//创建RegMsg结构体
+	var regMsg message.RegMsg
+	regMsg.User.UserId = userId
+	regMsg.User.UserPwd = userPwd
+	regMsg.User.UserName = userName
+	regMsg.User.Phone = phone
+	regMsg.User.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
+
+	//序列化RegMsg
+	data, err := json.Marshal(regMsg)
+	if err != nil {
+		errText := fmt.Sprintf("%s:%s", "Register loginMsg json Marshal error", err)
+		return errors.New(errText)
+	}
+	//data切片转换成string
+	msg.Data = string(data)
+
+	//序列化Message
+	dataMsg, err := json.Marshal(msg)
+	if err != nil {
+		errText := fmt.Sprintf("%s:%s", "Register msg json Marshal error", err)
+		return errors.New(errText)
+	}
+
+	//创建一个Transfer实力
+	transfer := &utils.Transfer{
+		Conn: conn,
+	}
+	//发送数据到服务器
+	err = transfer.WritePkg(dataMsg)
+	if err != nil {
+		errText := fmt.Sprintf("%s:%s", "Register WritePkg error", err)
+		return errors.New(errText)
+	}
+	//fmt.Printf("服务端数据发送成功 %v\n", dataMsg)
+
+	//接收服务器返回的数据
+	res, err := transfer.ReadPkg()
+	if err != nil {
+		errText := fmt.Sprintf("%s:%s", "Login ReadPkg error", err)
+		return errors.New(errText)
+	}
+	fmt.Printf("收到服务端数据 %v\n", res)
+
+	var resMsg message.ResponseMsg
+	//将res的Data反序列化成loginResMsg
+	err = json.Unmarshal([]byte(res.Data), &resMsg)
+	if err != nil {
+		errText := fmt.Sprintf("%s:%s", "Register ResponseMsg json Unmarshal error", err)
+		return errors.New(errText)
+	}
+	if resMsg.Code == 200 {
+		//注册成功
+		fmt.Println("注册成功")
+		//os.Exit(0)
+	} else {
+		fmt.Println(resMsg.Error)
+		//os.Exit(0)
+	}
+
 	return
 }

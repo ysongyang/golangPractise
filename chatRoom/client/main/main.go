@@ -37,14 +37,19 @@ func loginMain() {
 		case 2:
 			fmt.Println("请输入用户的ID号：")
 			fmt.Scanf("%d\n", &userId)
-			fmt.Println("请输入用户名：")
-			fmt.Scanf("%s\n", &userName)
 			fmt.Println("请输入用户密码：")
 			fmt.Scanf("%s\n", &userPwd)
+			fmt.Println("请输入用户昵称：")
+			fmt.Scanf("%s\n", &userName)
 			fmt.Println("请输入用户手机号：")
 			fmt.Scanf("%s\n", &phone)
 
 			//createdAt := time.Now().Format("2006-01-02 15:04:05")//后面的参数是固定的 否则将无法正常输出
+			userLoginProcess := &process.UserLoginProcess{}
+			err := userLoginProcess.Register(userId, userPwd, userName, phone)
+			if err != nil {
+				fmt.Println(err)
+			}
 		case 3:
 			fmt.Println("退出系统...")
 			os.Exit(0)

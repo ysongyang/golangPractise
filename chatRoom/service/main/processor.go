@@ -57,6 +57,10 @@ func (processor *Processor) ServiceProcessMsg(mes *message.Message) (err error) 
 		err = userProcess.ServiceProcessLogin(mes)
 		//处理登录的逻辑
 	case message.RegMsgType:
+		userProcess := &processes.UserProcess{
+			Conn: processor.Conn,
+		}
+		err = userProcess.ServiceProcessRegister(mes)
 	//注册的逻辑
 	default:
 		errText := fmt.Sprintf("%s:%s", "ServiceProcessMsg不存在的消息类型", err)

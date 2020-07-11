@@ -10,8 +10,8 @@ import (
 //显示登陆菜单、保持服务端通讯
 
 //显示登陆成功后的界面
-func ShowMenu() {
-
+func ShowMenu(data string) {
+	fmt.Println(data)
 	fmt.Println("---------------恭喜xxx登陆成功---------------")
 	fmt.Println("\t\t 1、显示在线用户列表")
 	fmt.Println("\t\t 2、发送信息")

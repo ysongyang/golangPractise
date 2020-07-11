@@ -30,10 +30,10 @@ type LoginResMsg struct {
 
 //注册消息体
 type RegMsg struct {
-	user model.User `json:"user"`
+	User model.User `json:"user"`
 }
 
-//消息返回的消息体
+//消息返回的消息体（通用）
 type ResponseMsg struct {
 	Code  int    `json:"code"`
 	Error string `json:"error"`
