@@ -3,9 +3,19 @@ package main
 //排序案例 选择排序、插入排序、快速排序
 import (
 	"fmt"
-	"math/rand"
 	"time"
 )
+
+//冒泡排序
+func dubbleSort(arr *[10]int) {
+	for i := 0; i < len(*arr)-1; i++ {
+		for j := 0; j < len(*arr)-1-i; j++ {
+			if (*arr)[j] > (*arr)[j+1] {
+				(*arr)[j], (*arr)[j+1] = (*arr)[j+1], (*arr)[j]
+			}
+		}
+	}
+}
 
 //选择排序案例
 func selectSort(arr *[800000]int) {
@@ -67,13 +77,13 @@ func quickSort(left int, right int, arr *[800000]int) {
 	temp := 0
 	//比pivot 小的数放左边
 	//比pivot 打的数放右边
-	for ; l < r; {
+	for l < r {
 		//先从pivot 左边找到大于 pivot的值
-		for ; (*arr)[l] < pivot; { //<升序
+		for (*arr)[l] < pivot { //<升序
 			l++
 		}
 		//从pivot 右边找到小于 pivot的值
-		for ; (*arr)[r] > pivot; { // > 升序
+		for (*arr)[r] > pivot { // > 升序
 			r--
 		}
 		if l >= r {
@@ -107,19 +117,23 @@ func quickSort(left int, right int, arr *[800000]int) {
 func main() {
 	//执行时间
 	t := time.Now()
-	var arr [800000]int
-	rand.Seed(time.Now().Unix())
-	for i := 0; i < 800000; i++ {
-		arr[i] = rand.Intn(900000)
-	}
+	//var arr [800000]int
+	//rand.Seed(time.Now().Unix())
+	//for i := 0; i < 800000; i++ {
+	//	arr[i] = rand.Intn(900000)
+	//}
 	//fmt.Println("原始数组：", arr)
 	//selectSort(&arr)  //app elapsed: 3.1187062s
 	//fmt.Println("选择排序：", arr)
 	//insertSort(&arr)  //app elapsed: 860.2854ms
 	//fmt.Println("插入排序：", arr)
-	quickSort(0, len(arr)-1, &arr) //app elapsed: 7.5459ms
+	//quickSort(0, len(arr)-1, &arr) //app elapsed: 7.5459ms
 
 	//快速排序速度最快
+
+	arr := [10]int{1, 23, 11, 55, 1234, 55, 223, 123, 566, 220}
+	dubbleSort(&arr)
+	fmt.Println(arr)
 
 	//fmt.Println("快速排序：", arr)
 	elapsed := time.Since(t)
